@@ -98,7 +98,7 @@ class ProfileScreen extends StatelessWidget {
                 keyboardType: TextInputType.number,
               ),
               DropdownButtonFormField<String>(
-                initialValue: gender,
+                value: gender,
                 decoration: const InputDecoration(labelText: 'Gender'),
                 items: ['Male', 'Female', 'Other']
                     .map((g) => DropdownMenuItem(value: g, child: Text(g)))
