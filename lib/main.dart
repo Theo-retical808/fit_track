@@ -1,3 +1,4 @@
+import 'package:fit_track/screens/welcome_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'managers/profile_manager.dart';
@@ -5,7 +6,6 @@ import 'managers/train_manager.dart';
 import 'managers/music_manager.dart';
 import 'managers/auth_manager.dart';
 import 'services/storage_service.dart';
-import 'screens/login_screen.dart';
 import 'theme/dark_theme.dart';
 
 void main() async {
@@ -29,7 +29,7 @@ class ThenixFitnessApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Thenix Fitness',
         theme: darkTheme,
-        home: const LoginScreen(),
+        home: const WelcomeScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

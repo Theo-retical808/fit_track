@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../managers/profile_manager.dart';
 import '../managers/auth_manager.dart';
 import '../models/user_profile.dart';
-import '../widgets/profile_card.dart';
 import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
@@ -73,21 +72,22 @@ class ProfileScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 16),
-                ProfileCard(
-                  profile: manager.profile!,
-                  bmi: manager.bmi,
-                  healthStatus: manager.healthStatus,
+                GestureDetector(
                   onTap: () =>
                       _showProfileDialog(context, manager, manager.profile),
+                  child: ProfileStats(
+                    profile: manager.profile!,
+                    bmi: manager.bmi,
+                  ),
                 ),
                 const SizedBox(height: 16),
-                Card(
+                                Card(
                   child: Padding(
                     padding: const EdgeInsets.all(16),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Health Advice',
+                        Text('Health Status: ${manager.healthStatus}',
                             style: Theme.of(context).textTheme.headlineMedium),
                         const SizedBox(height: 8),
                         Text(manager.healthAdvice),
@@ -95,6 +95,7 @@ class ProfileScreen extends StatelessWidget {
                     ),
                   ),
                 ),
+
               ],
             ),
           );
@@ -198,6 +199,100 @@ class ProfileScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ProfileStats extends StatelessWidget {
+  final UserProfile profile;
+  final double bmi;
+
+  const ProfileStats({super.key, required this.profile, required this.bmi});
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Health Stats', style: Theme.of(context).textTheme.headlineMedium),
+            const SizedBox(height: 24),
+            _StatusBar(
+              label: 'Weight',
+              value: profile.weight,
+              maxValue: 150,
+              color: Colors.blue,
+              unit: 'kg',
+            ),
+            const SizedBox(height: 16),
+            _StatusBar(
+              label: 'Height',
+              value: profile.height,
+              maxValue: 220,
+              color: Colors.green,
+              unit: 'cm',
+            ),
+            const SizedBox(height: 16),
+            _StatusBar(
+              label: 'BMI',
+              value: bmi,
+              maxValue: 40,
+              color: Colors.orange,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _StatusBar extends StatelessWidget {
+  final String label;
+  final double value;
+  final double maxValue;
+  final Color color;
+  final String unit;
+
+  const _StatusBar({
+    required this.label,
+    required this.value,
+    required this.maxValue,
+    required this.color,
+    this.unit = '',
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final double ratio = (value > 0 && maxValue > 0) ? value / maxValue : 0;
+    
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(label, style: const TextStyle(fontSize: 16)),
+        const SizedBox(height: 8),
+        Row(
+          children: [
+            Expanded(
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(8),
+                child: LinearProgressIndicator(
+                  value: ratio,
+                  minHeight: 12,
+                  backgroundColor: color.withOpacity(0.2),
+                  valueColor: AlwaysStoppedAnimation<Color>(color),
+                ),
+              ),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              '${value.toStringAsFixed(1)} ${unit.isNotEmpty ? unit : ''}',
+              style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+      ],
     );
   }
 }
