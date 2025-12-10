@@ -3,7 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:geolocator/geolocator.dart';
 import '../models/exercise_session.dart';
 import '../services/location_service.dart';
-import '../services/storage_service.dart';
+import '../services/auth_service.dart';
 import '../utils/distance_calculator.dart';
 import '../utils/constants.dart';
 
@@ -14,8 +14,6 @@ class TrainManager extends ChangeNotifier {
   Timer? _timer;
   Position? _lastPosition;
 
-  static const String _historyKey = 'exercise_history';
-
   ExerciseSession? get currentSession => _currentSession;
   List<ExerciseSession> get history => _history;
   bool get isTraining => _currentSession != null;
@@ -25,9 +23,9 @@ class TrainManager extends ChangeNotifier {
   }
 
   Future<void> loadHistory() async {
-    final list = StorageService.getList(_historyKey);
-    if (list != null) {
-      _history = list.map((json) => ExerciseSession.fromJson(json)).toList();
+    final userData = await AuthService.getCurrentUserData();
+    if (userData != null) {
+      _history = userData.exerciseHistory;
       notifyListeners();
     }
   }
@@ -114,8 +112,11 @@ class TrainManager extends ChangeNotifier {
   }
 
   Future<void> _saveHistory() async {
-    final list = _history.map((session) => session.toJson()).toList();
-    await StorageService.saveList(_historyKey, list);
+    final userData = await AuthService.getCurrentUserData();
+    if (userData != null) {
+      userData.exerciseHistory = _history;
+      await AuthService.saveCurrentUserData(userData);
+    }
   }
 
   @override

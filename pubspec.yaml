@@ -52,6 +52,9 @@ dependencies:
   
   # Icons
   flutter_vector_icons: ^2.0.0
+  
+  # File system
+  path_provider: ^2.1.2
 
 dev_dependencies:
   flutter_test:

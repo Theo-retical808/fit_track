@@ -4,6 +4,13 @@ A comprehensive fitness tracking application built with Flutter that combines ex
 
 ## Features
 
+### 🔐 User Authentication
+- Login and signup functionality
+- Individual user accounts with isolated data
+- Secure logout with confirmation
+- Each user has their own JSON file for data storage
+- Username and password validation
+
 ### 🏃 Exercise Tracking
 - Multiple exercise types: Running, Walking, Cycling, Swimming, Gym
 - Real-time GPS tracking with Haversine distance calculation
@@ -74,6 +81,7 @@ lib/
 
 - [Architecture Documentation](ARCHITECTURE.md) - Detailed architecture overview
 - [Setup Guide](SETUP_GUIDE.md) - Complete setup instructions
+- [Authentication Guide](AUTHENTICATION_GUIDE.md) - User authentication system details
 
 ## Screenshots
 
@@ -101,6 +109,7 @@ just_audio: ^0.9.36
 on_audio_query: ^2.9.0
 geolocator: ^11.0.0
 flutter_vector_icons: ^2.0.0
+path_provider: ^2.1.2
 ```
 
 ## Features in Detail

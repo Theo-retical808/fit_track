@@ -3,8 +3,9 @@ import 'package:provider/provider.dart';
 import 'managers/profile_manager.dart';
 import 'managers/train_manager.dart';
 import 'managers/music_manager.dart';
+import 'managers/auth_manager.dart';
 import 'services/storage_service.dart';
-import 'screens/auth_screen.dart';
+import 'screens/login_screen.dart';
 import 'theme/dark_theme.dart';
 
 void main() async {
@@ -20,6 +21,7 @@ class ThenixFitnessApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
+        ChangeNotifierProvider(create: (_) => AuthManager()),
         ChangeNotifierProvider(create: (_) => ProfileManager()),
         ChangeNotifierProvider(create: (_) => TrainManager()),
         ChangeNotifierProvider(create: (_) => MusicManager()),
@@ -27,7 +29,7 @@ class ThenixFitnessApp extends StatelessWidget {
       child: MaterialApp(
         title: 'Thenix Fitness',
         theme: darkTheme,
-        home: const AuthScreen(),
+        home: const LoginScreen(),
         debugShowCheckedModeBanner: false,
       ),
     );

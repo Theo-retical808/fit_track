@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../managers/profile_manager.dart';
+import '../managers/auth_manager.dart';
 import '../models/user_profile.dart';
 import '../widgets/profile_card.dart';
+import 'login_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -10,7 +12,16 @@ class ProfileScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
+      appBar: AppBar(
+        title: const Text('Profile'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout),
+            onPressed: () => _showLogoutDialog(context),
+            tooltip: 'Logout',
+          ),
+        ],
+      ),
       body: Consumer<ProfileManager>(
         builder: (context, manager, _) {
           if (manager.profile == null) {
@@ -33,11 +44,41 @@ class ProfileScreen extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Column(
               children: [
+                Consumer<AuthManager>(
+                  builder: (context, authManager, _) {
+                    return Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.person, size: 40),
+                            const SizedBox(width: 16),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('Logged in as:',
+                                    style: TextStyle(fontSize: 12)),
+                                Text(
+                                  authManager.currentUsername ?? 'Unknown',
+                                  style: const TextStyle(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
                 ProfileCard(
                   profile: manager.profile!,
                   bmi: manager.bmi,
                   healthStatus: manager.healthStatus,
-                  onTap: () => _showProfileDialog(context, manager, manager.profile),
+                  onTap: () =>
+                      _showProfileDialog(context, manager, manager.profile),
                 ),
                 const SizedBox(height: 16),
                 Card(
@@ -58,6 +99,34 @@ class ProfileScreen extends StatelessWidget {
             ),
           );
         },
+      ),
+    );
+  }
+
+  void _showLogoutDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Logout'),
+        content: const Text('Are you sure you want to logout?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () async {
+              await context.read<AuthManager>().logout();
+              if (!context.mounted) return;
+              Navigator.of(context).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (_) => const LoginScreen()),
+                (route) => false,
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Logout'),
+          ),
+        ],
       ),
     );
   }
