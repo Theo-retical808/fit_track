@@ -10,14 +10,25 @@ class AppConstants {
   static const Color textPrimaryColor = Color(0xFFFFFFFF);
   static const Color textSecondaryColor = Color(0xFFB3B3B3);
 
-  // Exercise types
-  static const List<String> exerciseTypes = [
+  // Distance-based exercises (tracked by GPS)
+  static const List<String> distanceExercises = [
     'Running',
     'Walking',
     'Cycling',
     'Swimming',
-    'Gym',
   ];
+
+  // Time-based exercises (tracked by repetitions/time)
+  static const List<String> timeExercises = [
+    'Push Ups',
+    'Curl Ups',
+    'Pull Ups',
+    'Squats',
+    'Planks',
+  ];
+
+  // All exercise types
+  static List<String> get exerciseTypes => [...distanceExercises, ...timeExercises];
 
   // MET values (Metabolic Equivalent of Task)
   static const Map<String, double> metValues = {
@@ -25,8 +36,22 @@ class AppConstants {
     'Walking': 3.5,
     'Cycling': 7.5,
     'Swimming': 8.0,
-    'Gym': 5.0,
+    'Push Ups': 6.0,
+    'Curl Ups': 4.5,
+    'Pull Ups': 8.0,
+    'Squats': 5.0,
+    'Planks': 3.5,
   };
+
+  // Check if exercise is distance-based
+  static bool isDistanceExercise(String exerciseType) {
+    return distanceExercises.contains(exerciseType);
+  }
+
+  // Check if exercise is time-based
+  static bool isTimeExercise(String exerciseType) {
+    return timeExercises.contains(exerciseType);
+  }
 
   // App strings
   static const String appName = 'Thenix Fitness';

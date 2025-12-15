@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: const Icon(Icons.bug_report),
       ),
       body: Container(
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,

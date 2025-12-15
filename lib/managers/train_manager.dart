@@ -30,28 +30,57 @@ class TrainManager extends ChangeNotifier {
     }
   }
 
-  Future<void> startExercise(String exerciseType, double targetValue, double userWeight) async {
-    final hasPermission = await LocationService.checkPermission();
-    if (!hasPermission) return;
+  Future<bool> startExercise(String exerciseType, double targetValue, double userWeight) async {
+    try {
+      final isDistanceExercise = AppConstants.isDistanceExercise(exerciseType);
+      
+      // For distance exercises, check location permission
+      if (isDistanceExercise) {
+        final hasPermission = await LocationService.checkPermission();
+        if (!hasPermission) {
+          print('Location permission denied');
+          return false;
+        }
+      }
 
-    _currentSession = ExerciseSession(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
-      exerciseType: exerciseType,
-      startTime: DateTime.now(),
-      targetValue: targetValue,
-    );
+      _currentSession = ExerciseSession(
+        id: DateTime.now().millisecondsSinceEpoch.toString(),
+        exerciseType: exerciseType,
+        startTime: DateTime.now(),
+        targetValue: targetValue,
+      );
 
-    _lastPosition = await LocationService.getCurrentPosition();
+      // Only get position for distance exercises
+      if (isDistanceExercise) {
+        _lastPosition = await LocationService.getCurrentPosition();
+        if (_lastPosition == null) {
+          print('Could not get current position');
+          _currentSession = null;
+          return false;
+        }
 
-    _positionSubscription = LocationService.getPositionStream().listen((position) {
-      _updatePosition(position, userWeight);
-    });
+        _positionSubscription = LocationService.getPositionStream().listen(
+          (position) {
+            _updatePosition(position, userWeight);
+          },
+          onError: (error) {
+            print('Position stream error: $error');
+          },
+        );
+      }
 
-    _timer = Timer.periodic(const Duration(seconds: 1), (_) {
-      _updateDuration(userWeight);
-    });
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
+        _updateDuration(userWeight);
+      });
 
-    notifyListeners();
+      print('Exercise started successfully: $exerciseType');
+      notifyListeners();
+      return true;
+    } catch (e) {
+      print('Error starting exercise: $e');
+      _currentSession = null;
+      return false;
+    }
   }
 
   void _updatePosition(Position position, double userWeight) {
@@ -77,6 +106,26 @@ class TrainManager extends ChangeNotifier {
     );
 
     _lastPosition = position;
+    notifyListeners();
+  }
+
+  void addRepetition() {
+    if (_currentSession == null) return;
+    
+    _currentSession = _currentSession!.copyWith(
+      repetitions: _currentSession!.repetitions + 1,
+    );
+    
+    notifyListeners();
+  }
+
+  void removeRepetition() {
+    if (_currentSession == null || _currentSession!.repetitions <= 0) return;
+    
+    _currentSession = _currentSession!.copyWith(
+      repetitions: _currentSession!.repetitions - 1,
+    );
+    
     notifyListeners();
   }
 

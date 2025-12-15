@@ -45,7 +45,7 @@ dependencies:
   
   # Audio
   just_audio: ^0.9.36
-  on_audio_query: ^2.8.0
+  # on_audio_query: ^2.9.0  # Temporarily disabled due to build issues
   
   # Location
   geolocator: ^13.0.0

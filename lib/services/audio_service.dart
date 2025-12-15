@@ -1,18 +1,41 @@
-import 'package:on_audio_query/on_audio_query.dart';
+// import 'package:on_audio_query/on_audio_query.dart'; // Temporarily disabled
 import '../models/track.dart';
 
 class AudioService {
-  static final OnAudioQuery _audioQuery = OnAudioQuery();
+  // static final OnAudioQuery _audioQuery = OnAudioQuery(); // Temporarily disabled
 
   static Future<bool> checkPermission() async {
-    return await _audioQuery.permissionsStatus();
+    // return await _audioQuery.permissionsStatus(); // Temporarily disabled
+    return true; // Mock permission for now
   }
 
   static Future<bool> requestPermission() async {
-    return await _audioQuery.permissionsRequest();
+    // return await _audioQuery.permissionsRequest(); // Temporarily disabled
+    return true; // Mock permission for now
   }
 
   static Future<List<Track>> getDeviceTracks() async {
+    // Temporarily return mock data instead of querying device
+    return [
+      Track(
+        id: '1',
+        title: 'Sample Song 1',
+        artist: 'Sample Artist',
+        albumArt: null,
+        uri: 'sample_uri_1',
+        duration: 180000, // 3 minutes
+      ),
+      Track(
+        id: '2',
+        title: 'Sample Song 2',
+        artist: 'Another Artist',
+        albumArt: null,
+        uri: 'sample_uri_2',
+        duration: 240000, // 4 minutes
+      ),
+    ];
+    
+    /* Original implementation - temporarily disabled
     final hasPermission = await checkPermission() || await requestPermission();
     if (!hasPermission) return [];
 
@@ -30,5 +53,6 @@ class AudioService {
       uri: song.uri ?? '',
       duration: song.duration ?? 0,
     )).toList();
+    */
   }
 }

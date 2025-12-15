@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/exercise_session.dart';
+import '../utils/constants.dart';
 
 class ExerciseCard extends StatelessWidget {
   final ExerciseSession session;
@@ -16,6 +17,7 @@ class ExerciseCard extends StatelessWidget {
     final duration = Duration(seconds: session.duration);
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds % 60;
+    final isDistanceExercise = AppConstants.isDistanceExercise(session.exerciseType);
 
     return Card(
       child: InkWell(
@@ -35,7 +37,13 @@ class ExerciseCard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text('Duration: ${minutes}m ${seconds}s'),
-              Text('Distance: ${session.distance.toStringAsFixed(2)} km'),
+              if (isDistanceExercise) ...[
+                Text('Distance: ${session.distance.toStringAsFixed(2)} km'),
+                Text('Target: ${session.targetValue.toStringAsFixed(1)} km'),
+              ] else ...[
+                Text('Repetitions: ${session.repetitions}'),
+                Text('Target: ${session.targetValue.toStringAsFixed(0)} reps'),
+              ],
               Text('Calories: ${session.caloriesBurned.toStringAsFixed(0)} kcal'),
               Text('Date: ${_formatDate(session.startTime)}'),
             ],
@@ -55,8 +63,16 @@ class ExerciseCard extends StatelessWidget {
         return Icons.directions_bike;
       case 'Swimming':
         return Icons.pool;
-      case 'Gym':
+      case 'Push Ups':
         return Icons.fitness_center;
+      case 'Curl Ups':
+        return Icons.self_improvement;
+      case 'Pull Ups':
+        return Icons.sports_gymnastics;
+      case 'Squats':
+        return Icons.accessibility_new;
+      case 'Planks':
+        return Icons.timer;
       default:
         return Icons.sports;
     }

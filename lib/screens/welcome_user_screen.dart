@@ -5,10 +5,10 @@ import '../navigation/main_tab_navigator.dart';
 class WelcomeUserScreen extends StatefulWidget {
   final String username;
 
-  const WelcomeUserScreen({Key? key, required this.username}) : super(key: key);
+  const WelcomeUserScreen({super.key, required this.username});
 
   @override
-  _WelcomeUserScreenState createState() => _WelcomeUserScreenState();
+  State<WelcomeUserScreen> createState() => _WelcomeUserScreenState();
 }
 
 class _WelcomeUserScreenState extends State<WelcomeUserScreen> with SingleTickerProviderStateMixin {
@@ -37,7 +37,7 @@ class _WelcomeUserScreenState extends State<WelcomeUserScreen> with SingleTicker
 
     _colorAnimation = ColorTween(
       begin: const Color(0xFF121212), // Standard dark theme background
-      end: Color.fromARGB(255, 58, 57, 70),
+      end: const Color.fromARGB(255, 58, 57, 70),
     ).animate(
       CurvedAnimation(
         parent: _controller,

@@ -280,7 +280,7 @@ class _StatusBar extends StatelessWidget {
                 child: LinearProgressIndicator(
                   value: ratio,
                   minHeight: 12,
-                  backgroundColor: color.withOpacity(0.2),
+                  backgroundColor: color.withValues(alpha: 0.2),
                   valueColor: AlwaysStoppedAnimation<Color>(color),
                 ),
               ),

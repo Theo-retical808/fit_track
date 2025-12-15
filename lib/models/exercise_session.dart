@@ -8,6 +8,7 @@ class ExerciseSession {
   final double caloriesBurned;
   final double targetValue;
   final List<LocationPoint> route;
+  final int repetitions; // for time-based exercises
 
   ExerciseSession({
     required this.id,
@@ -19,6 +20,7 @@ class ExerciseSession {
     this.caloriesBurned = 0.0,
     this.targetValue = 0.0,
     this.route = const [],
+    this.repetitions = 0,
   });
 
   Map<String, dynamic> toJson() => {
@@ -31,6 +33,7 @@ class ExerciseSession {
         'caloriesBurned': caloriesBurned,
         'targetValue': targetValue,
         'route': route.map((p) => p.toJson()).toList(),
+        'repetitions': repetitions,
       };
 
   factory ExerciseSession.fromJson(Map<String, dynamic> json) => ExerciseSession(
@@ -43,6 +46,7 @@ class ExerciseSession {
         caloriesBurned: json['caloriesBurned']?.toDouble() ?? 0.0,
         targetValue: json['targetValue']?.toDouble() ?? 0.0,
         route: (json['route'] as List?)?.map((p) => LocationPoint.fromJson(p)).toList() ?? [],
+        repetitions: (json['repetitions'] as int?) ?? 0,
       );
 
   ExerciseSession copyWith({
@@ -55,6 +59,7 @@ class ExerciseSession {
     double? caloriesBurned,
     double? targetValue,
     List<LocationPoint>? route,
+    int? repetitions,
   }) =>
       ExerciseSession(
         id: id ?? this.id,
@@ -66,6 +71,7 @@ class ExerciseSession {
         caloriesBurned: caloriesBurned ?? this.caloriesBurned,
         targetValue: targetValue ?? this.targetValue,
         route: route ?? this.route,
+        repetitions: repetitions ?? this.repetitions,
       );
 }
 
